@@ -8,7 +8,7 @@ import (
 
 var (
 	version    = "v2.9.2"
-	prerelease = "develop" // blank if full release
+	prerelease = "" // blank if full release
 )
 
 func buildVersion() string {
