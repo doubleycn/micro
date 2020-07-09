@@ -37,6 +37,8 @@ func Add(namespace, env string) error {
 		return errors.New("Missing namespace value")
 	}
 
+	config.Lock()
+	defer config.Unlock()
 	existing, err := List(env)
 	if err != nil {
 		return err
@@ -47,7 +49,6 @@ func Add(namespace, env string) error {
 			return nil
 		}
 	}
-
 	values, _ := config.Get("namespaces", env, "all")
 	if len(values) > 0 {
 		values = strings.Join([]string{values, namespace}, seperator)
@@ -77,7 +78,8 @@ func Remove(namespace, env string) error {
 	if current == namespace {
 		return errors.New("Cannot remove the current namespace")
 	}
-
+	config.Lock()
+	defer config.Unlock()
 	existing, err := List(env)
 	if err != nil {
 		return err
@@ -128,7 +130,7 @@ func Set(namespace, env string) error {
 	}
 
 	if !found {
-		return errors.New("Namespace does not exists")
+		return errors.New("Namespace does not exist")
 	}
 
 	return config.Set(namespace, "namespaces", env, "current")

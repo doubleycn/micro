@@ -22,22 +22,19 @@ const FileName = ".micro"
 // from disk
 var config = newConfig()
 
+type lockedConfig struct {
+	c conf.Config
+	m *filemutex.FileMutex
+}
+
 // Get a value from the .micro file
 func Get(path ...string) (string, error) {
-	m := mutex()
-	m.Lock()
-	defer m.Unlock()
-
-	tk := config.Get(path...).String("")
+	tk := config.c.Get(path...).String("")
 	return strings.TrimSpace(tk), nil
 }
 
 // Set a value in the .micro file
 func Set(value string, path ...string) error {
-	m := mutex()
-	m.Lock()
-	defer m.Unlock()
-
 	// get the filepath
 	fp, err := filePath()
 	if err != nil {
@@ -45,10 +42,20 @@ func Set(value string, path ...string) error {
 	}
 
 	// set the value
-	config.Set(value, path...)
+	config.c.Set(value, path...)
 
 	// write to the file
-	return ioutil.WriteFile(fp, config.Bytes(), 0644)
+	return ioutil.WriteFile(fp, config.c.Bytes(), 0644)
+}
+
+// Lock the config file
+func Lock() error {
+	return config.m.Lock()
+}
+
+// Unlock the config file
+func Unlock() error {
+	return config.m.Unlock()
 }
 
 func filePath() (string, error) {
@@ -60,7 +67,7 @@ func filePath() (string, error) {
 }
 
 // newConfig returns a loaded config
-func newConfig() conf.Config {
+func newConfig() *lockedConfig {
 	m := mutex()
 	m.Lock()
 	defer m.Unlock()
@@ -69,7 +76,7 @@ func newConfig() conf.Config {
 	fp, err := filePath()
 	if err != nil {
 		log.Error(err)
-		return conf.DefaultConfig
+		return &lockedConfig{c: conf.DefaultConfig, m: m}
 	}
 
 	// write the file if it does not exist
@@ -77,7 +84,7 @@ func newConfig() conf.Config {
 		ioutil.WriteFile(fp, []byte{}, 0644)
 	} else if err != nil {
 		log.Error(err)
-		return conf.DefaultConfig
+		return &lockedConfig{c: conf.DefaultConfig, m: m}
 	}
 
 	// create a new config
@@ -90,17 +97,17 @@ func newConfig() conf.Config {
 	)
 	if err != nil {
 		log.Error(err)
-		return conf.DefaultConfig
+		return &lockedConfig{c: conf.DefaultConfig, m: m}
 	}
 
 	// load the config
 	if err := c.Load(); err != nil {
 		log.Error(err)
-		return conf.DefaultConfig
+		return &lockedConfig{c: conf.DefaultConfig, m: m}
 	}
 
 	// return the conf
-	return c
+	return &lockedConfig{c: c, m: m}
 }
 
 func mutex() *filemutex.FileMutex {
