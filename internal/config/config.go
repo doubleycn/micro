@@ -10,6 +10,8 @@ import (
 	conf "github.com/micro/go-micro/v2/config"
 	"github.com/micro/go-micro/v2/config/source/file"
 	"github.com/micro/go-micro/v2/util/log"
+
+	"github.com/gofrs/flock"
 )
 
 // FileName for global micro config
@@ -20,9 +22,14 @@ const FileName = ".micro"
 // from disk
 var config = newConfig()
 
+type lockedConfig struct {
+	c conf.Config
+	m *flock.Flock
+}
+
 // Get a value from the .micro file
 func Get(path ...string) (string, error) {
-	tk := config.Get(path...).String("")
+	tk := config.c.Get(path...).String("")
 	return strings.TrimSpace(tk), nil
 }
 
@@ -35,10 +42,22 @@ func Set(value string, path ...string) error {
 	}
 
 	// set the value
-	config.Set(value, path...)
+	config.c.Set(value, path...)
 
 	// write to the file
-	return ioutil.WriteFile(fp, config.Bytes(), 0644)
+	return ioutil.WriteFile(fp, config.c.Bytes(), 0644)
+}
+
+func Lock() error {
+	err := config.m.Lock()
+	if err != nil {
+		return err
+	}
+	return config.c.Sync()
+}
+
+func Unlock() error {
+	return config.m.Unlock()
 }
 
 func filePath() (string, error) {
@@ -50,20 +69,21 @@ func filePath() (string, error) {
 }
 
 // newConfig returns a loaded config
-func newConfig() conf.Config {
+func newConfig() *lockedConfig {
 	// get the filepath
 	fp, err := filePath()
 	if err != nil {
 		log.Error(err)
-		return conf.DefaultConfig
+		return &lockedConfig{c: conf.DefaultConfig, m: flock.NewFlock(os.TempDir() + FileName + ".lock")}
 	}
+	m := flock.NewFlock(fp + ".lock")
 
 	// write the file if it does not exist
 	if _, err := os.Stat(fp); os.IsNotExist(err) {
 		ioutil.WriteFile(fp, []byte{}, 0644)
 	} else if err != nil {
 		log.Error(err)
-		return conf.DefaultConfig
+		return &lockedConfig{c: conf.DefaultConfig, m: m}
 	}
 
 	// create a new config
@@ -76,15 +96,16 @@ func newConfig() conf.Config {
 	)
 	if err != nil {
 		log.Error(err)
-		return conf.DefaultConfig
+		return &lockedConfig{c: conf.DefaultConfig, m: m}
 	}
 
 	// load the config
 	if err := c.Load(); err != nil {
 		log.Error(err)
-		return conf.DefaultConfig
+		return &lockedConfig{c: conf.DefaultConfig, m: m}
 	}
 
 	// return the conf
-	return c
+	return &lockedConfig{c: c, m: m}
+
 }

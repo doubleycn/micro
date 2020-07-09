@@ -37,6 +37,10 @@ func Add(namespace, env string) error {
 		return errors.New("Missing namespace value")
 	}
 
+	if err := config.Lock(); err != nil {
+		return err
+	}
+	defer config.Unlock()
 	existing, err := List(env)
 	if err != nil {
 		return err
@@ -77,6 +81,11 @@ func Remove(namespace, env string) error {
 	if current == namespace {
 		return errors.New("Cannot remove the current namespace")
 	}
+
+	if err := config.Lock(); err != nil {
+		return err
+	}
+	defer config.Unlock()
 
 	existing, err := List(env)
 	if err != nil {

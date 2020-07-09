@@ -126,6 +126,8 @@ type Env struct {
 }
 
 func AddEnv(env Env) {
+	config.Lock()
+	defer config.Unlock()
 	envs := getEnvs()
 	envs[env.Name] = env
 	setEnvs(envs)
@@ -222,6 +224,8 @@ func GetEnvs() []Env {
 
 // SetEnv selects an environment to be used.
 func SetEnv(envName string) {
+	config.Lock()
+	defer config.Unlock()
 	envs := getEnvs()
 	_, ok := envs[envName]
 	if !ok {
