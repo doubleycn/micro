@@ -22,8 +22,7 @@ var config = newConfig()
 
 // Get a value from the .micro file
 func Get(path ...string) (string, error) {
-	c := newConfig()
-	tk := c.Get(path...).String("")
+	tk := config.Get(path...).String("")
 	return strings.TrimSpace(tk), nil
 }
 
@@ -36,11 +35,10 @@ func Set(value string, path ...string) error {
 	}
 
 	// set the value
-	c := newConfig()
-	c.Set(value, path...)
+	config.Set(value, path...)
 
 	// write to the file
-	return ioutil.WriteFile(fp, c.Bytes(), 0644)
+	return ioutil.WriteFile(fp, config.Bytes(), 0644)
 }
 
 func filePath() (string, error) {
