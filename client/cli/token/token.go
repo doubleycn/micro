@@ -54,10 +54,12 @@ func Save(envName string, token *auth.Token) error {
 	if err := config.Set(token.AccessToken, "micro", "auth", envName, "token"); err != nil {
 		return err
 	}
+	time.Sleep(500 * time.Millisecond)
 	// Store the refresh token in micro config
 	if err := config.Set(token.RefreshToken, "micro", "auth", envName, "refresh-token"); err != nil {
 		return err
 	}
+	time.Sleep(500 * time.Millisecond)
 	// Store the refresh token in micro config
 	return config.Set(fmt.Sprintf("%v", token.Expiry.Unix()), "micro", "auth", envName, "expiry")
 }

@@ -35,6 +35,10 @@ func Get(path ...string) (string, error) {
 	return strings.TrimSpace(tk), nil
 }
 
+func All() []byte {
+	return config.c.Bytes()
+}
+
 // Set a value in the .micro file
 func Set(value string, path ...string) error {
 	// get the filepath
