@@ -95,9 +95,11 @@ func newConfig() *lockedConfig {
 	defer m.Unlock()
 
 	// write the file if it does not exist
+	// this is the problem
 	if _, err := os.Stat(fp); os.IsNotExist(err) {
 		ioutil.WriteFile(fp, []byte{}, 0644)
 	} else if err != nil {
+		errs = append(errs, "OS stat err: "+err.Error())
 		log.Error(err)
 		return &lockedConfig{c: conf.DefaultConfig, m: m}
 	}
