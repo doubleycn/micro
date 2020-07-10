@@ -29,7 +29,6 @@ type lockedConfig struct {
 
 // Get a value from the .micro file
 func Get(path ...string) (string, error) {
-	config.c.Sync()
 	tk := config.c.Get(path...).String("")
 	return strings.TrimSpace(tk), nil
 }
@@ -41,7 +40,6 @@ func Set(value string, path ...string) error {
 	if err != nil {
 		return err
 	}
-	// config.c.Sync()
 	// set the value
 	config.c.Set(value, path...)
 
