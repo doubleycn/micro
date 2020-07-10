@@ -47,6 +47,10 @@ func Get(envName string) (*auth.Token, error) {
 
 // Save saves the auth token to the user's local config file
 func Save(envName string, token *auth.Token) error {
+	if err := config.Lock(); err != nil {
+		return err
+	}
+	defer config.Unlock()
 	if err := config.Set(token.AccessToken, "micro", "auth", envName, "token"); err != nil {
 		return err
 	}
@@ -62,6 +66,10 @@ func Save(envName string, token *auth.Token) error {
 // for example at testing: not having a token is a different state
 // than having an invalid token.
 func Remove(envName string) error {
+	if err := config.Lock(); err != nil {
+		return err
+	}
+	defer config.Unlock()
 	if err := config.Set("", "micro", "auth", envName, "token"); err != nil {
 		return err
 	}

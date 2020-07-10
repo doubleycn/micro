@@ -121,6 +121,10 @@ func Set(namespace, env string) error {
 	if len(namespace) == 0 {
 		return errors.New("Missing namespace value")
 	}
+	if err := config.Lock(); err != nil {
+		return err
+	}
+	defer config.Unlock()
 
 	existing, err := List(env)
 	if err != nil {
