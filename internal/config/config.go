@@ -77,6 +77,8 @@ func newConfig() *lockedConfig {
 		return &lockedConfig{c: conf.DefaultConfig, m: flock.NewFlock(os.TempDir() + FileName + ".lock")}
 	}
 	m := flock.NewFlock(fp + ".lock")
+	m.Lock()
+	defer m.Unlock()
 
 	// write the file if it does not exist
 	if _, err := os.Stat(fp); os.IsNotExist(err) {
