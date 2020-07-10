@@ -54,3 +54,5 @@ spec:
         - containerPort: 8085
           name: network-port
           protocol: UDP
+        image: micro/micro
+        imagePullPolicy: Always

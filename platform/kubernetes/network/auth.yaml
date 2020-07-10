@@ -31,3 +31,5 @@ spec:
         ports:
         - containerPort: 8000
           name: auth-port
+        image: micro/micro
+        imagePullPolicy: Always

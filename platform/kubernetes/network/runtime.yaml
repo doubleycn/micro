@@ -109,3 +109,5 @@ spec:
           value: "true"
         args:
         - runtime
+        image: micro/micro
+        imagePullPolicy: Always

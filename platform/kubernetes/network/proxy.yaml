@@ -38,3 +38,5 @@ spec:
           name: https-port
         - containerPort: 8081
           name: proxy-port
+        image: micro/micro
+        imagePullPolicy: Always

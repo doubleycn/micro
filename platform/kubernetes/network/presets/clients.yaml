@@ -6,8 +6,6 @@ spec:
   selector:
     matchLabels:
       micro: client
-  image: micro/micro
-  imagePullPolicy: Always
   env:
     - name: MICRO_AUTH
       value: "service"

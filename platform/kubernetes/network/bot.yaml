@@ -31,6 +31,8 @@ spec:
             "bot",
             "--inputs=slack"
           ]
+          image: micro/micro
+          imagePullPolicy: Always
           env:
           - name: MICRO_SLACK_TOKEN
             valueFrom:

@@ -31,3 +31,5 @@ spec:
         ports:
         - containerPort: 8001
           name: broker-port
+        image: micro/micro
+        imagePullPolicy: Always

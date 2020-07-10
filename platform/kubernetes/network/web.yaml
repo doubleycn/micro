@@ -36,3 +36,5 @@ spec:
         ports:
         - containerPort: 443
           name: web-port
+        image: micro/micro
+        imagePullPolicy: Always

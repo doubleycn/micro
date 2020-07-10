@@ -28,3 +28,5 @@ spec:
         ports:
         - containerPort: 8002
           name: service
+        image: micro/micro
+        imagePullPolicy: Always

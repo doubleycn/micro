@@ -34,3 +34,5 @@ spec:
           value: "600"
         args:
         - debug
+        image: micro/micro
+        imagePullPolicy: Always

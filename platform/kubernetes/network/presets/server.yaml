@@ -6,8 +6,6 @@ spec:
   selector:
     matchLabels:
       micro: server
-  image: micro/micro
-  imagePullPolicy: Always
   env:
     - name: MICRO_LOG_LEVEL
       value: "debug"
