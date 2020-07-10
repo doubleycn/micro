@@ -49,7 +49,7 @@ metadata:
   namespace: default
   name: micro-init
   labels:
-    micro: runtime
+    micro: server-init
     name: micro-init
   annotations:
     name: "go.micro.init"
@@ -62,12 +62,12 @@ spec:
   selector:
     matchLabels:
       name: micro-init
-      micro: runtime
+      micro: server-init
   template:
     metadata:
       labels:
         name: micro-init
-        micro: runtime
+        micro: server-init
     spec:
       serviceAccountName: micro-init
       containers:

@@ -125,8 +125,6 @@ spec:
           value: "/certs/registry/key.pem"
         - name: MICRO_ENABLE_ACME
           value: "true"
-        - name: MICRO_ACME_HOSTS
-          value: 'proxy.m3o.com'
         - name: MICRO_RUNTIME
           value: "kubernetes"
         - name: MICRO_RUNTIME_PROFILE

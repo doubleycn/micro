@@ -4,7 +4,7 @@ metadata:
   namespace: default
   name: micro-bot
   labels:
-    micro: runtime
+    micro: client
     name: micro-bot
   annotations:
     name: "go.micro.bot"
@@ -17,12 +17,12 @@ spec:
   selector:
     matchLabels:
       name: micro-bot
-      micro: runtime
+      micro: client
   template:
     metadata:
       labels:
         name: micro-bot
-        micro: runtime
+        micro: client
     spec:
       containers:
         - name: bot
@@ -31,26 +31,7 @@ spec:
             "bot",
             "--inputs=slack"
           ]
-          image: micro/micro
-          imagePullPolicy: Always
           env:
-          - name: MICRO_AUTH
-            value: "service"
-          - name: MICRO_AUTH_ADDRESS
-            value: "micro-auth:8010"
-          - name: MICRO_AUTH_PUBLIC_KEY
-            valueFrom:
-              secretKeyRef:
-                name: micro-secrets
-                key: auth_public_key
-          - name: MICRO_BROKER
-            value: "service"
-          - name: MICRO_BROKER_ADDRESS
-            value: "micro-broker:8001"
-          - name: MICRO_REGISTRY
-            value: "service"
-          - name: MICRO_REGISTRY_ADDRESS
-            value: "micro-registry:8000"
           - name: MICRO_SLACK_TOKEN
             valueFrom:
               secretKeyRef:

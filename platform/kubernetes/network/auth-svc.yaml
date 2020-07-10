@@ -5,11 +5,11 @@ metadata:
   namespace: default
   labels:
     name: micro-auth
-    micro: runtime
+    micro: server
 spec:
   ports:
   - port: 8010
     protocol: TCP
   selector:
     name: micro-auth
-    micro: runtime
+    micro: server

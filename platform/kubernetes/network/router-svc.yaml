@@ -5,11 +5,11 @@ metadata:
   namespace: default
   labels:
     name: micro-router
-    micro: runtime
+    micro: server
 spec:
   ports:
   - port: 8084
     protocol: TCP
   selector:
     name: micro-router
-    micro: runtime
+    micro: server
