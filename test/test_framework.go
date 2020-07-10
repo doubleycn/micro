@@ -164,9 +164,9 @@ func (s server) launch() {
 		if err != nil {
 			return outp, err
 		}
-		// if len(outp) > 0 {
-		// 	return outp, errors.New("Not added")
-		// }
+		if len(outp) > 0 {
+			return outp, errors.New("Not added")
+		}
 
 		outp, err = exec.Command("micro", "env").CombinedOutput()
 		if err != nil {

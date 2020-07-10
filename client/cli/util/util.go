@@ -131,12 +131,9 @@ func AddEnv(env Env) {
 		os.Exit(1)
 	}
 	defer config.Unlock()
-	fmt.Printf("Adding env %s\n", env)
 	envs := getEnvs()
 	envs[env.Name] = env
-	fmt.Printf("Adding env %s %+v\n", env, envs)
 	setEnvs(envs)
-	fmt.Printf("Added env %s %+v\n", env, envs)
 
 }
 
