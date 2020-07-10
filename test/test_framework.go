@@ -11,6 +11,8 @@ import (
 	"syscall"
 	"testing"
 	"time"
+
+	"github.com/micro/micro/v2/internal/config"
 )
 
 const (
@@ -34,7 +36,8 @@ func try(blockName string, t *t, f cmdFunc, maxTime time.Duration) {
 			_, file, line, _ := runtime.Caller(1)
 			fname := filepath.Base(file)
 			if err != nil {
-				t.Fatalf("%v:%v, %v (failed after %v with '%v'), output: '%v'", fname, line, blockName, time.Since(start), err, string(outp))
+				envs, _ := config.Get("envs")
+				t.Fatalf("%v:%v, %v (failed after %v with '%v'), output: '%v', config: '%+v'", fname, line, blockName, time.Since(start), err, string(outp), envs)
 			}
 			return
 		}

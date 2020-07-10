@@ -172,11 +172,11 @@ func login(serv server, t *t, email, password string) {
 		if err != nil {
 			return nil, err
 		}
-		token.Save(serv.envName, &auth.Token{
+		err = token.Save(serv.envName, &auth.Token{
 			AccessToken:  tok["access_token"].(string),
 			RefreshToken: tok["refresh_token"].(string),
 			Expiry:       time.Unix(exp, 0),
 		})
-		return outp, nil
+		return outp, err
 	}, 8*time.Second)
 }
