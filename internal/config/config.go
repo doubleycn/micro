@@ -1,6 +1,7 @@
 package config
 
 import (
+	"fmt"
 	"io/ioutil"
 	"os"
 	"os/user"
@@ -21,6 +22,7 @@ const FileName = ".micro"
 // each function call doesn't load the .micro file
 // from disk
 var config = newConfig()
+var errs = []string{}
 
 type lockedConfig struct {
 	c conf.Config
@@ -44,7 +46,16 @@ func Set(value string, path ...string) error {
 	config.c.Set(value, path...)
 
 	// write to the file
-	return ioutil.WriteFile(fp, config.c.Bytes(), 0644)
+	b := config.c.Bytes()
+	if len(b) == 0 {
+		errs = append(errs, fmt.Sprintf("Tried to set zero config value %s, path %s", value, path))
+		// return errors.New("Trying to set config but bytes is empty")
+	}
+	return ioutil.WriteFile(fp, b, 0644)
+}
+
+func Errors() []string {
+	return errs
 }
 
 func Lock() error {

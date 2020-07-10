@@ -37,7 +37,7 @@ func try(blockName string, t *t, f cmdFunc, maxTime time.Duration) {
 			fname := filepath.Base(file)
 			if err != nil {
 				envs, _ := config.Get("envs")
-				t.Fatalf("%v:%v, %v (failed after %v with '%v'), output: '%v', config: '%+v'", fname, line, blockName, time.Since(start), err, string(outp), envs)
+				t.Fatalf("%v:%v, %v (failed after %v with '%v'), output: '%v', config: '%+v', config errs: %+v", fname, line, blockName, time.Since(start), err, string(outp), envs, config.Errors())
 			}
 			return
 		}
