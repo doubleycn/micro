@@ -10,7 +10,6 @@ import (
 	"strings"
 
 	ccli "github.com/micro/cli/v2"
-	"github.com/micro/go-micro/v2/logger"
 	"github.com/micro/micro/v2/internal/config"
 	"github.com/micro/micro/v2/internal/platform"
 	"github.com/micro/micro/v2/service/runtime/profile"
@@ -128,15 +127,16 @@ type Env struct {
 
 func AddEnv(env Env) {
 	if err := config.Lock(); err != nil {
-		logger.Errorf("Error locking %s", err)
+		fmt.Printf("Error locking %s\n", err)
+		os.Exit(1)
 	}
 	defer config.Unlock()
-	logger.Infof("Adding env %s", env)
+	fmt.Printf("Adding env %s\n", env)
 	envs := getEnvs()
 	envs[env.Name] = env
-	logger.Infof("Adding env %s %+v", env, envs)
+	fmt.Printf("Adding env %s %+v\n", env, envs)
 	setEnvs(envs)
-	logger.Infof("Added env %s %+v", env, envs)
+	fmt.Printf("Added env %s %+v\n", env, envs)
 
 }
 
