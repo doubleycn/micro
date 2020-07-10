@@ -75,10 +75,13 @@ func Remove(envName string) error {
 	if err := config.Set("", "micro", "auth", envName, "token"); err != nil {
 		return err
 	}
+	time.Sleep(500 * time.Millisecond)
+
 	// Store the refresh token in micro config
 	if err := config.Set("", "micro", "auth", envName, "refresh-token"); err != nil {
 		return err
 	}
+	time.Sleep(500 * time.Millisecond)
 	// Store the refresh token in micro config
 	return config.Set("", "micro", "auth", envName, "expiry")
 }
