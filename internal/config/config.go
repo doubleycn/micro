@@ -40,7 +40,7 @@ func Set(value string, path ...string) error {
 	if err != nil {
 		return err
 	}
-	config.c.Sync()
+	// config.c.Sync()
 	// set the value
 	config.c.Set(value, path...)
 
