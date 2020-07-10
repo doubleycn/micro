@@ -51,7 +51,11 @@ func Set(value string, path ...string) error {
 		errs = append(errs, fmt.Sprintf("Tried to set zero config value %s, path %s", value, path))
 		// return errors.New("Trying to set config but bytes is empty")
 	}
-	return ioutil.WriteFile(fp, b, 0644)
+	if err := ioutil.WriteFile(fp, b, 0644); err != nil {
+		errs = append(errs, err.Error())
+	}
+	return err
+
 }
 
 func Errors() []string {
