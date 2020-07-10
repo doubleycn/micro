@@ -26,7 +26,7 @@ func testServerAuth(t *t) {
 }
 
 func TestServerAuthJWT(t *testing.T) {
-	// trySuite(t, testServerAuthJWT, retryCount)
+	trySuite(t, testServerAuthJWT, retryCount)
 }
 
 func testServerAuthJWT(t *t) {
